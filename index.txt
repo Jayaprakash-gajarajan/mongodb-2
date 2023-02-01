@@ -1,0 +1,688 @@
+// 1.db.topics.aggregate(
+//     ... [
+//     ...   {
+//     ...     '$lookup': {
+//     ...       'from': 'tasks', 
+//     ...       'localField': 'topic_id', 
+//     ...       'foreignField': 'task_id',
+//     ...       'as': 'result'
+//     ...     }
+//     ...   }
+//     ... ])
+// 2.db.user.find({placement:{$eq:"Ready"}})
+// 3. db.codekata.aggregate( [ { '$lookup': { 'from': 'user', 'localField': 'codekata_id', 'foreignField': 'id', 'as': 'result' } }])
+// 4.db.mentor.find({mentees:{$gt:15}})
+// 5.db.user.aggregate( [ { '$lookup': { 'from': 'tasks', 'localField': 'id', 'foreignField': 'task_id', 'as': 'result' } }])
+
+users=[
+  {
+      "id":1,
+      "user_name":"prakash",
+      "placement":"Ready",
+  },
+  {
+      "id":2,
+      "user_name":"munivel",
+      "placement":"Ready",
+  },
+  {
+      "id":3,
+      "user_name":"sakthivel",
+       "placement":"Ready",
+  },
+  {
+      "id":4,
+      "user_name":"kamalesh",
+      "placement":"Not Ready",
+  },
+  {
+      "id":5,
+      "user_name":"boopathi",
+      "placement":"Ready",
+  },
+]
+codekata=[
+  {
+      "codekata_id":1,
+      "problem_solved":260,
+  },
+  {
+      "codekata_id":2,
+      "problem_solved":100,
+  },
+  {
+      "codekata_id":3,
+      "problem_solved":180,
+  },
+  {
+      "codekata_id":4,
+      "problem_solved":200,
+  },
+  {
+      "codekata_id":5,
+      "problem_solved":210,
+  },
+]
+attendance=[
+  {
+      "attenance_id":1,
+      "month":"octobor",
+      "attendances":"true",
+      'attendances':[
+          {
+              "date":15-10-2022,
+              "status":"present",
+          },
+          {
+              "date":18-10-2022,
+              "status":"present",
+          },
+          {
+              "date":25-10-2022,
+              "status":"present",
+          },
+           {
+              "date":27-10-2022,
+              "status":"present",
+          },
+
+      ]
+  },
+   {
+      "attenance_id":2,
+      "month":"octobor",
+       "attendances":"true",
+      'attendances':[
+          {
+              "date":15-10-2022,
+              "status":"present",
+          },
+          {
+              "date":18-10-2022,
+              "status":"present",
+          },
+          {
+              "date":25-10-2022,
+              "status":"present",
+          },
+           {
+              "date":27-10-2022,
+              "status":"present",
+          },
+
+      ]
+  },
+   {
+      "attenance_id":3,
+      "month":"octobor",
+      "attendances":"true",
+      'attendances':[
+          {
+              "date":15-10-2022,
+              "status":"present",
+          },
+          {
+              "date":18-10-2022,
+              "status":"present",
+          },
+          {
+              "date":25-10-2022,
+              "status":"present",
+          },
+           {
+              "date":27-10-2022,
+              "status":"present",
+          },
+
+      ]
+  },
+   {
+      "attenance_id":4,
+      "month":"octobor",
+      "attendances":'false',
+      'attendances':[
+          {
+              "date":15-10-2022,
+              "status":"present",
+          },
+          {
+              "date":18-10-2022,
+              "status":"present",
+          },
+          {
+              "date":25-10-2022,
+              "status":"absent",
+          },
+           {
+              "date":27-10-2022,
+              "status":"absent",
+          },
+
+      ]
+  },
+   {
+      "attenance_id":5,
+      "month":"octobor",
+      "attendances":"true",
+      'attendances':[
+          {
+              "date":15-10-2022,
+              "status":"present",
+          },
+          {
+              "date":18-10-2022,
+              "status":"present",
+          },
+          {
+              "date":25-10-2022,
+              "status":"present",
+          },
+           {
+              "date":27-10-2022,
+              "status":"present",
+          },
+
+      ]
+  }
+]
+topics=[
+  {
+      "topic_id":1,
+      'topics':[
+        {
+       "topic1":"HTML",
+       "topic2":"Css",
+       "topic3":"JavaScript",
+     
+   } ]  
+  },
+  {
+      "topic_id":2,
+      'topics':[{
+       "topic1":"HTML",
+       "topic2":"Css",
+       "topic3":"JavaScript",
+  }]  
+  },
+  {
+      "topic_id":3,
+     'topics':[
+      {
+       "topic1":"HTML",
+       "topic2":"Css",
+       "topic3":"JavaScript",
+       }
+      ]  
+
+  },
+  {
+      "topic_id":4,
+      'topics':[{
+       "topic1":"HTML",
+       "topic2":"Css",
+       "topic3":"JavaScript",
+      }]  
+  },
+  {
+      "topic_id":5,
+      'topics':[{
+       "topic1":"HTML",
+       "topic2":"Css",
+       "topic3":"JavaScript",
+      }]  
+  },
+]
+tasks=[
+  {
+      "task_id":1,
+      'tasks':[
+          {
+      "task1":"web page",
+      "task_status":"submitted",
+      "task2":"design",
+      "task_status":"submitted",
+      "task3":"login page",
+      "task_status":"submitted",
+      }
+      ]
+  },
+  {
+      "task_id":2,
+     'tasks':[
+          {
+      "task1":"web page",
+      "task_status":"submitted",
+      "task2":"design",
+      "task_status":"submitted",
+      "task3":"login page",
+      "task_status":"submitted",
+      }
+      ]
+  },
+  {
+      "task_id":3,
+      'tasks':[
+          {
+      "task1":"web page",
+      "task_status":"submitted",
+      "task2":"design",
+      "task_status":"submitted",
+      "task3":"login page",
+      "task_status":"submitted",
+      }
+      ]
+  },
+  {
+      "task_id":4,
+      'tasks':[
+          {
+      "task1":"web page",
+      "task_status":"submitted",
+      "task2":"design",
+      "task_status":"Not submitted",
+      "task3":"login page",
+      "task_status":"Not submitted",
+      }
+      ]
+  },
+  {
+      "task_id":5,
+      'tasks':[
+          {
+      "task1":"web page",
+      "task_status":"submitted",
+      "task2":"design",
+      "task_status":"submitted",
+      "task3":"login page",
+      "task_status":"submitted",
+      }
+      ]
+  },
+]
+company=[
+  {
+      "company_id":1,
+      "month":"octobor",
+      "company_name":"zoho",
+      "coming_date":15-10-2022,
+  },
+  {
+      "company_id":2,
+       "month":"octobor",
+      "company_name":"freshworks",
+      "coming_date":2-11-2022,
+  },
+  {
+      "company_id":3,
+      "month":"octobor",
+      "company_name":"paypal",
+      "coming_date":15-10-2022,
+  },
+]
+mentors=[
+  {
+      "mentor-id":1,
+      "mentor_name":"Raghav",
+      "mentees":20,
+  },
+  {
+      "mentor-id":2,
+      "mentor_name":"Mohan",
+      "mentees":18,
+  },
+  {
+      "mentor-id":3,
+      "mentor_name":"Akbarbasha",
+      "mentees":22,
+  },
+  {
+      "mentor-id":1,
+      "mentor_name":"Abthul kalam",
+      "mentees":13,
+  },
+]
+
+//db.users.insertMany([
+    {
+        "id":1,
+        "user_name":"prakash",
+        "placement":"Ready",
+    },
+    {
+        "id":2,
+        "user_name":"munivel",
+        "placement":"Ready",
+    },
+    {
+        "id":3,
+        "user_name":"sakthivel",
+         "placement":"Ready",
+    },
+    {
+        "id":4,
+        "user_name":"kamalesh",
+        "placement":"Not Ready",
+    },
+    {
+        "id":5,
+        "user_name":"boopathi",
+        "placement":"Ready",
+    },
+//  ])
+// //db.codekata.insertMany()
+// db.attendances.insertMany([
+//     {
+//         "attenance_id":1,
+//         "month":"octobor",
+//         "attendances":"true",
+//         'attendances':[
+//             {
+//                 "date":15-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":18-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":25-10-2022,
+//                 "status":"present",
+//             },
+//              {
+//                 "date":27-10-2022,
+//                 "status":"present",
+//             },
+  
+//         ]
+//     },
+//      {
+//         "attenance_id":2,
+//         "month":"octobor",
+//          "attendances":"true",
+//         'attendances':[
+//             {
+//                 "date":15-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":18-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":25-10-2022,
+//                 "status":"present",
+//             },
+//              {
+//                 "date":27-10-2022,
+//                 "status":"present",
+//             },
+  
+//         ]
+//     },
+//      {
+//         "attenance_id":3,
+//         "month":"octobor",
+//         "attendances":"true",
+//         'attendances':[
+//             {
+//                 "date":15-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":18-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":25-10-2022,
+//                 "status":"present",
+//             },
+//              {
+//                 "date":27-10-2022,
+//                 "status":"present",
+//             },
+  
+//         ]
+//     },
+//      {
+//         "attenance_id":4,
+//         "month":"octobor",
+//         "attendances":'false',
+//         'attendances':[
+//             {
+//                 "date":15-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":18-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":25-10-2022,
+//                 "status":"absent",
+//             },
+//              {
+//                 "date":27-10-2022,
+//                 "status":"absent",
+//             },
+  
+//         ]
+//     },
+//      {
+//         "attenance_id":5,
+//         "month":"octobor",
+//         "attendances":"true",
+//         'attendances':[
+//             {
+//                 "date":15-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":18-10-2022,
+//                 "status":"present",
+//             },
+//             {
+//                 "date":25-10-2022,
+//                 "status":"present",
+//             },
+//              {
+//                 "date":27-10-2022,
+//                 "status":"present",
+//             },
+  
+//         ]
+//     }
+//   ])
+//   db.topics.insertMany([
+//   {
+//     "topic_id":1,
+//     'topics':[
+//       {
+//      "topic1":"HTML",
+//      "topic2":"Css",
+//      "topic3":"JavaScript",
+   
+//  } ]  
+// },
+// {
+//     "topic_id":2,
+//     'topics':[{
+//      "topic1":"HTML",
+//      "topic2":"Css",
+//      "topic3":"JavaScript",
+// }]  
+// },
+// {
+//     "topic_id":3,
+//    'topics':[
+//     {
+//      "topic1":"HTML",
+//      "topic2":"Css",
+//      "topic3":"JavaScript",
+//      }
+//     ]  
+
+// },
+// {
+//     "topic_id":4,
+//     'topics':[{
+//      "topic1":"HTML",
+//      "topic2":"Css",
+//      "topic3":"JavaScript",
+//     }]  
+// },
+// {
+//     "topic_id":5,
+//     'topics':[{
+//      "topic1":"HTML",
+//      "topic2":"Css",
+//      "topic3":"JavaScript",
+//     }]  
+// },
+// ])
+// db.tasks.insertMany([
+    {
+        "task_id":1,
+        'tasks':[
+            {
+        "task1":"web page",
+        "task_status":"submitted",
+        "task2":"design",
+        "task_status":"submitted",
+        "task3":"login page",
+        "task_status":"submitted",
+        }
+        ]
+    },
+    {
+        "task_id":2,
+       'tasks':[
+            {
+        "task1":"web page",
+        "task_status":"submitted",
+        "task2":"design",
+        "task_status":"submitted",
+        "task3":"login page",
+        "task_status":"submitted",
+        }
+        ]
+    },
+    {
+        "task_id":3,
+        'tasks':[
+            {
+        "task1":"web page",
+        "task_status":"submitted",
+        "task2":"design",
+        "task_status":"submitted",
+        "task3":"login page",
+        "task_status":"submitted",
+        }
+        ]
+    },
+    {
+        "task_id":4,
+        'tasks':[
+            {
+        "task1":"web page",
+        "task_status":"submitted",
+        "task2":"design",
+        "task_status":"Not submitted",
+        "task3":"login page",
+        "task_status":"Not submitted",
+        }
+        ]
+    },
+    {
+        "task_id":5,
+        'tasks':[
+            {
+        "task1":"web page",
+        "task_status":"submitted",
+        "task2":"design",
+        "task_status":"submitted",
+        "task3":"login page",
+        "task_status":"submitted",
+        }
+        ]
+    },
+//   ])
+db.companyDrive.insertMany([
+    {
+        "company_id":1,
+        "month":"octobor",
+        "company_name":"zoho",
+        "coming_date":"2022-10-15",
+    },
+    {
+        "company_id":2,
+         "month":"octobor",
+        "company_name":"freshworks",
+        "coming_date":"2022-11-02",
+    },
+    {
+        "company_id":3,
+        "month":"octobor",
+        "company_name":"paypal",
+        "coming_date":"2022-10-16",
+    },
+  ])
+// db.mentors.insertMany([
+//     {
+//         "mentor-id":1,
+//         "mentor_name":"Raghav",
+//         "mentees":20,
+//     },
+//     {
+//         "mentor-id":2,
+//         "mentor_name":"Mohan",
+//         "mentees":18,
+//     },
+//     {
+//         "mentor-id":3,
+//         "mentor_name":"Akbarbasha",
+//         "mentees":22,
+//     },
+//     {
+//         "mentor-id":1,
+//         "mentor_name":"Abthul kalam",
+//         "mentees":13,
+//     },
+//   ])
+
+db.companyDrive.find({$and:[
+    {coming_date:{$gt:"15-10-2022"}},
+    {coming_date:{$lt:"30-10-2022"}}
+           ]})
+db.company.find({$and:[{$gt:ISODate("2022-10-14"),$lt:ISODate("2022-10-30")}]})
+db.company.find({coming_date:{$lt:ISODate("2022-10-15T00:00:00.000+00:00")}})
+db.company_drives.aggregate([
+    {
+      $lookup:
+        {
+          from: "company_drives",
+          localField: "company_id",
+          foreignField: "company_id",
+          as: "user"
+        }
+   }
+ ])
+
+ db.company_drives.aggregate( [
+    {
+       $lookup:
+          {
+            from: "company_drives",
+            pipeline: [ {
+                $match: {
+                   $expr: {
+                      $and: [
+                         {coming_date:{$gt:15-10-2022 }},
+                         {coming_date:{$lt:30-10-2022}}
+                      ]
+                   }
+                }
+             } ],
+            as: "date"
+          }
+     }
+ ] )
